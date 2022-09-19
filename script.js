@@ -1,37 +1,27 @@
 'use strict';
 
-// document.querySelector('.message').textContent = '🤗 Correct number!';
-// document.querySelector('.number').textContent = 13;
-// document.querySelector('.score').te xtContent = 10;
-// document.querySelector('.guess').value = 23;
-
-/**
- * Реализуйте функцию отдыха в игре, чтобы игрок мог сделать новую догадку!
-Ваши задачи:
-3. Восстановите начальные условия для полей ввода сообщения, числа, счета и угадывания
-поля
-4. Также восстановите исходный цвет фона (#222) и ширину номера (15rem).
-
- */
-
 let secretNumber = Math.trunc(Math.random() * 20) + 1;
 let score = 20;
 let highscore = 0;
 
-document.querySelector('.check').addEventListener('click', function () {
+const displayMessage = message => {
+  document.querySelector('.message').textContent = message;
+};
+
+document.querySelector('.check').addEventListener('click', () => {
   const guess = Number(document.querySelector('.guess').value);
   console.log(guess);
 
   // When there is no input
+
   if (!guess) {
-    document.querySelector('.message').textContent = '😶‍🌫️ No number!';
+    displayMessage('😶‍🌫️ No number!');
 
     // When player wins
   } else if (guess === secretNumber) {
-    document.querySelector('.message').textContent = '🤗 Correct number!';
+    displayMessage('🤗 Correct number!');
     document.querySelector('.number').textContent = secretNumber;
-
-    document.querySelector('body').style.backgroundColor = '#60b347'; // add a background
+    document.querySelector('body').style.backgroundColor = '#60b347';
     document.querySelector('.number').style.width = '30rem';
 
     if (score > highscore) {
@@ -39,25 +29,15 @@ document.querySelector('.check').addEventListener('click', function () {
       document.querySelector('.highscore').textContent = highscore;
     }
 
-    // When guess is too high
-  } else if (guess > secretNumber) {
+    // When guess is wrong
+  } else if (guess !== secretNumber) {
     if (score > 1) {
-      document.querySelector('.message').textContent = '😢 Too high!';
+      let wrongText = guess > secretNumber ? '😢 Too high!' : '😣 Too low!';
+      displayMessage(wrongText);
       score--;
       document.querySelector('.score').textContent = score;
     } else {
-      document.querySelector('.message').textContent = '😭 You lost the game!';
-      document.querySelector('.score').textContent = 0;
-    }
-
-    // When guess is too low
-  } else if (guess < secretNumber) {
-    if (score > 1) {
-      document.querySelector('.message').textContent = '😢 Too low!';
-      score--;
-      document.querySelector('.score').textContent = score;
-    } else {
-      document.querySelector('.message').textContent = '😭 You lost the game!';
+      displayMessage('😭 You lost the game!');
       document.querySelector('.score').textContent = 0;
     }
   }
@@ -65,13 +45,13 @@ document.querySelector('.check').addEventListener('click', function () {
 
 // Challenge#1
 
-document.querySelector('.again').addEventListener('click', function () {
+document.querySelector('.again').addEventListener('click', () => {
   score = 20;
   secretNumber = Math.trunc(Math.random() * 20) + 1;
   document.querySelector('.score').textContent = score;
   document.querySelector('.number').textContent = '?';
-  document.querySelector('.message').textContent = 'Start guessing...';
+  displayMessage('Start guessing...');
   document.querySelector('.guess').value = '';
-  document.querySelector('body').style.backgroundColor = '#222'; // add a background
+  document.querySelector('body').style.backgroundColor = '#222';
   document.querySelector('.number').style.width = '15rem';
 });
